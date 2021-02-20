@@ -46,6 +46,9 @@ def clean_data(df):
     # concatenate the original dataframe with the new `categories` dataframe
     df = pd.concat([df, categories], axis=1)
 
+    # remove rows with values other than 0, 1
+    df = df[(~categories.isin([0, 1])).sum(axis=1)==0]
+
     # drop duplicates
     df.drop_duplicates(inplace=True)
 
