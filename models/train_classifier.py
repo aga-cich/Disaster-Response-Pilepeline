@@ -76,9 +76,9 @@ def build_model():
         'vect__ngram_range': ((1, 1), (1, 2)),
         'vect__max_df': (0.75, 1.0),
         'vect__max_features': (None, 5000),
-        'tfidf__use_idf': (True, False),
-        'classifier__estimator__n_neighbors': [5],
-        'classifier__estimator__leaf_size': [25, 30]
+#        'tfidf__use_idf': (True, False),
+#        'classifier__estimator__n_neighbors': [5],
+#        'classifier__estimator__leaf_size': [25, 30]
     }
 
     cv = GridSearchCV(pipeline, param_grid = parameters)
