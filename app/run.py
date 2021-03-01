@@ -5,6 +5,16 @@ import pandas as pd
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 
+import nltk
+nltk.download(['punkt',
+               'wordnet',
+               'averaged_perceptron_tagger',
+               'stopwords'],
+                quiet=True)
+from nltk.corpus import stopwords
+
+import re
+
 from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
@@ -16,15 +26,19 @@ from sqlalchemy import create_engine
 app = Flask(__name__)
 
 def tokenize(text):
-    tokens = word_tokenize(text)
+    # normalize the text
+    text = re.sub(r"[^a-zA-Z0-9?-]", " ", text.lower())
+
+    # tokenize the text + remove stopwords
+    tokens = [token
+                for token in word_tokenize(text)
+                if token not in stopwords.words("english")]
     lemmatizer = WordNetLemmatizer()
 
-    clean_tokens = []
-    for tok in tokens:
-        clean_tok = lemmatizer.lemmatize(tok).lower().strip()
-        clean_tokens.append(clean_tok)
+    # lemmatize
+    lemmed = [lemmatizer.lemmatize(token).lower().strip() for token in tokens]
 
-    return clean_tokens
+    return lemmed
 
 # load data
 engine = create_engine('sqlite:///../data/DisasterResponse.db')
